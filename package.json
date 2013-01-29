@@ -8,5 +8,8 @@
   },
   "repository": "",
   "author": "mikanda IT Solutions",
-  "license": "GPL"
+  "license": "GPL",
+  "dependencies": {
+    "request": "*"
+  }
 }
