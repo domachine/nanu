@@ -65,6 +65,22 @@ Nanu.prototype.insert = function (doc, options, callback) {
     }
     return request(options, callback);
 };
+DesignDoc.prototype.view = function (view, options, callback) {
+    options = options || {};
+    if (typeof options === 'function') {
+        callback = options;
+        options = {};
+    }
+    if (options.key) {
+        options.qs = options.qs || {};
+        options.qs.key = JSON.stringify(options.key);
+        delete options.key;
+    }
+    options.url = options.uri = this._host + '/' + this._database
+        + '/_design/' + this._design + '/_view/' + view;
+    console.log(options.url, options.qs);
+    return request(options, callback);
+};
 DesignDoc.prototype.update = function (handler, options, id, callback) {
 
     /* The options and the id parameter are optional so we have to figure out
