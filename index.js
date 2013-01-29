@@ -78,7 +78,6 @@ DesignDoc.prototype.view = function (view, options, callback) {
     }
     options.url = options.uri = this._host + '/' + this._database
         + '/_design/' + this._design + '/_view/' + view;
-    console.log(options.url, options.qs);
     return request(options, callback);
 };
 DesignDoc.prototype.update = function (handler, options, id, callback) {
