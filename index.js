@@ -1,6 +1,6 @@
 /*jslint nomen: true, node: true, devel: true, maxlen: 79 */
 'use strict';
-var request = require('request'),
+var _request = require('request'),
     Nanu,
     DesignDoc;
 function lightCopy(object) {
@@ -12,6 +12,34 @@ function lightCopy(object) {
         }
     }
     return newObject;
+}
+function request(options, callback) {
+    if (callback) {
+        return _request(options, function (error, res) {
+            var e;
+            if (error) {
+                callback(error, res);
+            } else {
+                if (typeof res.body === 'string') {
+                    res.body = JSON.parse(res.body);
+                }
+                if (
+                    res.statusCode >= 200
+                        && res.statusCode <= 202
+                ) {
+                    callback(null, res.body);
+                } else {
+                    e = new Error(res.body.error + ': '
+                                  + res.body.reason);
+                    e.error = res.body.error;
+                    e.reason = res.body.reason;
+                    callback(e, res);
+                }
+            }
+        });
+    } else {
+        return _request(options);
+    }
 }
 exports.Nanu = Nanu = function (database, host) {
     var that = this,
@@ -45,6 +73,16 @@ Nanu.prototype.design = function (designName) {
     p[proto] = this;
     d[proto] = p;
     return d;
+};
+Nanu.prototype.get = function (id, options, callback) {
+    options = options || {};
+    if (typeof options === 'function') {
+        callback = options;
+        options = {};
+    }
+    options.url = options.uri = this._host + '/' + this._database
+        + '/' + id;
+    return request(options, callback);
 };
 Nanu.prototype.insert = function (doc, options, callback) {
     options = options || {};
