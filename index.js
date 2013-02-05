@@ -33,6 +33,7 @@ function request(options, callback) {
                   + res.body.reason);
           e.error = res.body.error;
           e.reason = res.body.reason;
+          e.statusCode = res.statusCode;
           callback(e, res);
         }
       }
