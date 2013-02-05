@@ -126,7 +126,8 @@ Nanu.prototype.bulk = function (options, callback) {
 
 DesignDoc.prototype.view = function (view, options, callback) {
   var host = this._parent._host,
-    database = this._parent._database;
+    database = this._parent._database,
+    key;
   options = options || {};
   if (typeof options === 'function') {
     callback = options;
@@ -144,6 +145,22 @@ DesignDoc.prototype.view = function (view, options, callback) {
     options.body.keys = options.keys;
     delete options.keys;
   }
+  [
+    'startkey',
+    'endkey',
+    'limit',
+    'reduce',
+    'group'
+  ].forEach(
+    function (k) {
+      if (options.hasOwnProperty(k)) {
+        options.method = 'GET';
+        options.qs = options.qs || {};
+        options.qs[k] = JSON.stringify(options[k]);
+        delete options[k];
+      }
+    }
+  );
   options.url = options.uri = host + '/' + database
     + '/_design/' + this._design + '/_view/' + view;
   return request(options, callback);
