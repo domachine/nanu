@@ -150,7 +150,8 @@ DesignDoc.prototype.view = function (view, options, callback) {
     'endkey',
     'limit',
     'reduce',
-    'group'
+    'group',
+    'include_docs'
   ].forEach(
     function (k) {
       if (options.hasOwnProperty(k)) {
