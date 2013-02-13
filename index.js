@@ -157,6 +157,7 @@ Doc.prototype.insert = function (name, options, callback) {
     callback = options;
     options = {};
   }
+  options.method = 'PUT';
   if (options.contentType) {
     options.headers = options.headers || {};
     options.headers['Content-Type'] = options.contentType;
