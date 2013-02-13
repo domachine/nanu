@@ -1,21 +1,18 @@
 /*jslint nomen: true, node: true, devel: true, maxlen: 79 */
 'use strict';
 var _request = require('request'),
-  Nanu,
-  DesignDoc;
-function lightCopy(object) {
-  var newObject = {},
-    key;
-  for (key in object) {
-    if (object.hasOwnProperty(key)) {
-      newObject[key] = object[key];
-    }
-  }
-  return newObject;
-}
+    Nanu,
+    DesignDoc;
+exports._request = _request;
+_request = module.exports._request;
 function request(options, callback) {
+  var __request;
+  if (options._request) {
+    __request = options._request;
+    delete options._request;
+  }
   if (callback) {
-    return _request(options, function (error, res) {
+    return __request(options, function (error, res) {
       var e;
       if (error) {
         callback(error, res);
@@ -39,25 +36,34 @@ function request(options, callback) {
       }
     });
   } else {
-    return _request(options);
+    return __request(options);
   }
 }
-exports.Nanu = Nanu = function (database, host) {
+function Nanu(database, host) {
   var that = this,
     proto = '__proto__',
     key;
   this._host = host || 'http://localhost:5984';
   this._database = database;
 };
-exports.DesignDoc = DesignDoc = function (parent, designdoc) {
+function Doc(parent, doc) {
+  this._parent = parent;
+  this._doc = doc;
+}
+function DesignDoc(parent, designdoc) {
   this._parent = parent;
   this._design = designdoc;
+}
+Nanu.prototype._buildUrl = function (args) {
+  var url;
+  url = [this._host, this._database].concat(args);
+  return url.join('/');
+};
+Nanu.prototype.doc = function (doc) {
+  return new Doc(this, doc);
 };
 Nanu.prototype.design = function (designName) {
-  var d = new DesignDoc(this, designName),
-    proto = '__proto__',
-    p,
-    key;
+  var d = new DesignDoc(this, designName);
 
   /* To create a scoped design-document we slurp all the design doc prototype
    * properties into the given design doc object. */
@@ -120,6 +126,50 @@ Nanu.prototype.bulk = function (options, callback) {
   }
   options.url = options.uri = url;
   return request(options, callback);
+};
+Doc.prototype._buildUrl = function () {
+  var args,
+      i;
+  args = [this._doc];
+  for (i = 0; i < arguments.length; ++i) {
+    args.push(arguments[i]);
+  }
+  return this._parent._buildUrl.call(this._parent, args);
+};
+
+/**
+ * Appends an attachment to the document.
+ *
+ * @param {String} name
+ * @param {Object} [options]
+ * @param {Function} [callback]
+ */
+
+Doc.prototype.insert = function (name, options, callback) {
+  var url;
+  options = options || {};
+  if (options.rev) {
+    options.qs = options.qs || {};
+    options.qs.rev = options.rev;
+    delete options.rev;
+  }
+  if (typeof options === 'function') {
+    callback = options;
+    options = {};
+  }
+  if (options.contentType) {
+    options.headers = options.headers || {};
+    options.headers['Content-Type'] = options.contentType;
+    delete options.contentType;
+  }
+  if (options.batch) {
+    options.qs = options.qs || {};
+    options.qs.batch = 'ok';
+    delete options.batch;
+  }
+  url = this._buildUrl('attachment');
+  options.uri = options.url = url;
+  return request(options);
 };
 
 /** Executes the given view and returns the result. */
@@ -199,3 +249,5 @@ DesignDoc.prototype.update = function (handler, options, id, callback) {
   options.url = options.uri = url;
   return request(options, callback);
 };
+exports.Nanu = Nanu;
+exports.DesignDoc = DesignDoc;
