@@ -27,8 +27,8 @@ describe(
               headers: {
                 'Content-Type': 'image/png'
               },
-              url: 'host/db/doc/attachment',
-              uri: 'host/db/doc/attachment'
+              url: 'host/db/doc/attach',
+              uri: 'host/db/doc/attach'
             })
           );
         };
