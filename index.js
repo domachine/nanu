@@ -170,7 +170,7 @@ Doc.prototype.insert = function (name, options, callback) {
   }
   url = this._buildUrl(name);
   options.uri = options.url = url;
-  return request(options);
+  return request(options, callback);
 };
 
 /** Executes the given view and returns the result. */

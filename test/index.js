@@ -24,6 +24,7 @@ describe(
                 rev: '123',
                 batch: 'ok'
               },
+              method: 'PUT',
               headers: {
                 'Content-Type': 'image/png'
               },
