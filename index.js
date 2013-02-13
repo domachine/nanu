@@ -6,7 +6,7 @@ var _request = require('request'),
 exports._request = _request;
 _request = module.exports._request;
 function request(options, callback) {
-  var __request;
+  var __request = _request;
   if (options._request) {
     __request = options._request;
     delete options._request;
@@ -167,7 +167,7 @@ Doc.prototype.insert = function (name, options, callback) {
     options.qs.batch = 'ok';
     delete options.batch;
   }
-  url = this._buildUrl('attachment');
+  url = this._buildUrl(name);
   options.uri = options.url = url;
   return request(options);
 };
