@@ -3,16 +3,6 @@
 var _request = require('request'),
   Nanu,
   DesignDoc;
-function lightCopy(object) {
-  var newObject = {},
-    key;
-  for (key in object) {
-    if (object.hasOwnProperty(key)) {
-      newObject[key] = object[key];
-    }
-  }
-  return newObject;
-}
 function request(options, callback) {
   if (callback) {
     return _request(options, function (error, res) {
