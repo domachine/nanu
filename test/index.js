@@ -26,7 +26,8 @@ describe(
               },
               method: 'PUT',
               headers: {
-                'Content-Type': 'image/png'
+                'Content-Type': 'image/png',
+                'accept': 'application/json'
               },
               url: 'host/db/doc/attach',
               uri: 'host/db/doc/attach'
@@ -54,7 +55,10 @@ describe(
             JSON.stringify({
               method: 'HEAD',
               uri: 'host/db/doc',
-              url: 'host/db/doc'
+              url: 'host/db/doc',
+              headers: {
+                'accept': 'application/json'
+              }
             })
           );
           callback(

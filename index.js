@@ -11,6 +11,8 @@ function request(options, callback) {
     __request = options._request;
     delete options._request;
   }
+  options.headers = options.headers || {};
+  options.headers.accept = 'application/json';
   if (callback) {
     return __request(options, function (error, res) {
       var e;
@@ -26,9 +28,6 @@ function request(options, callback) {
           }
           callback(null, res.body, res.headers);
         } else {
-          if (typeof res.body === 'string') {
-            res.body = JSON.parse(res.body);
-          }
           e = new Error(res.body.error + ': '
                   + res.body.reason);
           e.error = res.body.error;
