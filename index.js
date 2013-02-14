@@ -160,7 +160,10 @@ Doc.prototype._buildUrl = function () {
 };
 
 /**
- * Appends an attachment to the document.
+ * Appends an attachment to the document.  This function accepts the following
+ * options.
+ *
+ *  * `contentType`: This gives the content type of the attachment.
  *
  * @param {String} name
  * @param {Object} [options]
@@ -201,7 +204,7 @@ Doc.prototype.get = function (name, options, callback) {
     options = {};
   }
   options.url = options.uri = this._buildUrl(name);
-  return request(options);
+  return request(options, callback);
 };
 
 /** Executes the given view and returns the result. */
