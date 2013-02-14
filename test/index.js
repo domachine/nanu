@@ -44,5 +44,47 @@ describe(
         );
       }
     );
+    it(
+      'should produce a valid HEAD request',
+      function (done) {
+        var _request;
+        _request = function (options, callback) {
+          assert.equal(
+            JSON.stringify(options),
+            JSON.stringify({
+              method: 'HEAD',
+              uri: 'host/db/doc',
+              url: 'host/db/doc'
+            })
+          );
+          callback(
+            null,
+            {
+              statusCode: 200,
+              headers: {
+                etag: '"123"'
+              },
+              body: {
+              }
+            }
+          );
+        };
+        nanu.head(
+          'doc',
+          {
+            _request: _request
+          },
+          function (error, res) {
+            assert.equal(
+              JSON.stringify(res),
+              JSON.stringify({
+                etag: '123'
+              })
+            );
+            done();
+          }
+        );
+      }
+    );
   }
 );
