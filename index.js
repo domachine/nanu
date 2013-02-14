@@ -24,6 +24,9 @@ function request(options, callback) {
           res.statusCode >= 200
             && res.statusCode <= 202
         ) {
+          if (res.headers.etag) {
+            res.body.etag = JSON.parse(res.headers.etag);
+          }
           callback(null, res.body);
         } else {
           e = new Error(res.body.error + ': '
@@ -79,6 +82,25 @@ Nanu.prototype.get = function (id, options, callback) {
   options.url = options.uri = this._host + '/' + this._database
     + '/' + id;
   return request(options, callback);
+};
+
+/**
+ * Performs a simple document get request but with head as method.  This
+ * encourages couchdb to only send meta data about the document.
+ *
+ * @param {String} id The id of the desired document.
+ * @param {Object} options Passed to `Nanu.get()`
+ * @param {Function} callback
+ */
+
+Nanu.prototype.head = function (id, options, callback) {
+  options = options || {};
+  if (typeof options === 'function') {
+    callback = options;
+    options = {};
+  }
+  options.method = 'HEAD';
+  return this.get(id, options, callback);
 };
 Nanu.prototype.insert = function (doc, options, callback) {
   options = options || {};
@@ -171,6 +193,15 @@ Doc.prototype.insert = function (name, options, callback) {
   url = this._buildUrl(name);
   options.uri = options.url = url;
   return request(options, callback);
+};
+Doc.prototype.get = function (name, options, callback) {
+  options = options || {};
+  if (typeof options === 'function') {
+    callback = options;
+    options = {};
+  }
+  options.url = options.uri = this._buildUrl(name);
+  return request(options);
 };
 
 /** Executes the given view and returns the result. */
