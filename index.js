@@ -26,6 +26,9 @@ function request(options, callback) {
           }
           callback(null, res.body, res.headers);
         } else {
+          if (typeof res.body === 'string') {
+            res.body = JSON.parse(res.body);
+          }
           e = new Error(res.body.error + ': '
                   + res.body.reason);
           e.error = res.body.error;
