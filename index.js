@@ -20,6 +20,12 @@ function request(options, callback) {
         callback(error, res);
       } else {
         if (
+          res.headers['content-type'] === 'application/json'
+            && typeof res.body === 'string'
+        ) {
+          res.body = JSON.parse(res.body);
+        }
+        if (
           res.statusCode >= 200
             && res.statusCode <= 202
         ) {
