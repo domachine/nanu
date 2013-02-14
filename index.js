@@ -43,9 +43,6 @@ function request(options, callback) {
   }
 }
 function Nanu(database, host) {
-  var that = this,
-    proto = '__proto__',
-    key;
   this._host = host || 'http://localhost:5984';
   this._database = database;
 };
@@ -66,12 +63,7 @@ Nanu.prototype.doc = function (doc) {
   return new Doc(this, doc);
 };
 Nanu.prototype.design = function (designName) {
-  var d = new DesignDoc(this, designName);
-
-  /* To create a scoped design-document we slurp all the design doc prototype
-   * properties into the given design doc object. */
-
-  return d;
+  return new DesignDoc(this, designName);
 };
 Nanu.prototype.get = function (id, options, callback) {
   options = options || {};
@@ -164,7 +156,7 @@ Doc.prototype._buildUrl = function () {
  * options.
  *
  *  * `contentType`: This gives the content type of the attachment.
- *  * `batch`: A truthy
+ *  * `batch`: A truthy value enables the couchdb batch feature.
  *
  * @param {String} name
  * @param {Object} [options]
