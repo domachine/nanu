@@ -17,24 +17,21 @@ function request(options, callback) {
       if (error) {
         callback(error, res);
       } else {
-        if (typeof res.body === 'string') {
-          res.body = JSON.parse(res.body);
-        }
         if (
           res.statusCode >= 200
             && res.statusCode <= 202
         ) {
           if (res.headers.etag) {
-            res.body.etag = JSON.parse(res.headers.etag);
+            res.headers.etag = JSON.parse(res.headers.etag);
           }
-          callback(null, res.body);
+          callback(null, res.body, res.headers);
         } else {
           e = new Error(res.body.error + ': '
                   + res.body.reason);
           e.error = res.body.error;
           e.reason = res.body.reason;
           e.statusCode = res.statusCode;
-          callback(e, res);
+          callback(e, res, res.headers);
         }
       }
     });
@@ -164,6 +161,7 @@ Doc.prototype._buildUrl = function () {
  * options.
  *
  *  * `contentType`: This gives the content type of the attachment.
+ *  * `batch`: A truthy
  *
  * @param {String} name
  * @param {Object} [options]

@@ -74,9 +74,9 @@ describe(
           {
             _request: _request
           },
-          function (error, res) {
+          function (error, res, headers) {
             assert.equal(
-              JSON.stringify(res),
+              JSON.stringify(headers),
               JSON.stringify({
                 etag: '123'
               })
