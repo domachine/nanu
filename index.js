@@ -194,6 +194,15 @@ Doc.prototype.insert = function (name, options, callback) {
   options.uri = options.url = url;
   return request(options, callback);
 };
+Doc.prototype.get = function (name, options, callback) {
+  options = options || {};
+  if (typeof options === 'function') {
+    callback = options;
+    options = {};
+  }
+  options.url = options.uri = this._buildUrl(name);
+  return request(options);
+};
 
 /** Executes the given view and returns the result. */
 

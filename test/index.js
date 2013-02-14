@@ -86,5 +86,19 @@ describe(
         );
       }
     );
+    it(
+      'should produce a valid attachment get request',
+      function () {
+        function _request(options) {
+          assert.equal(options.url, 'host/db/doc/attachment');
+        }
+        nanu.doc('doc').get(
+          'attachment',
+          {
+            _request: _request
+          }
+        );
+      }
+    );
   }
 );
