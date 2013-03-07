@@ -1,5 +1,6 @@
 var assert = require('assert'),
-    nanu = new (require('..').Nanu)('db', 'host');
+    Nanu = require('..').Nanu,
+    nanu = new Nanu('db', 'host');
 describe(
   'Doc',
   function () {
@@ -100,6 +101,31 @@ describe(
           'attachment',
           {
             _request: _request
+          }
+        );
+      }
+    );
+    it(
+      'it should return json',
+      function (done) {
+        var n = new Nanu('level2level');
+        n.insert(
+          {
+            _id: 'testdoc',
+            type: 'module'
+          },
+          function (err, res, headers) {
+            if (err) {
+              done(err);
+            }
+            n.get(
+              'testdoc',
+              function (err, res, headers) {
+                console.log(headers, res);
+                assert.equal(typeof res, 'object');
+                done(err);
+              }
+            );
           }
         );
       }

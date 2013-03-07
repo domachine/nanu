@@ -1,8 +1,6 @@
 /*jslint nomen: true, node: true, devel: true, maxlen: 79 */
 'use strict';
-var _request = require('request'),
-    Nanu,
-    DesignDoc;
+var _request = require('request');
 exports._request = _request;
 _request = module.exports._request;
 function request(options, callback) {
@@ -137,7 +135,7 @@ Nanu.prototype.bulk = function (options, callback) {
   }
   if (options.include_docs) {
     options.qs = options.qs || {};
-    options.qs.include_docs = options.include_docs;
+    options.qs.include_docs = JSON.stringify(options.include_docs);
     delete options.include_docs;
   }
   if (!url) {
