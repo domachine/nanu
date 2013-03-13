@@ -232,6 +232,7 @@ DesignDoc.prototype.view = function (view, options, callback) {
     'limit',
     'reduce',
     'group',
+    'group_level',
     'include_docs'
   ].forEach(
     function (k) {
