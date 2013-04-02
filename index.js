@@ -3,6 +3,7 @@
 var _request = require('request');
 exports._request = _request;
 _request = module.exports._request;
+exports.request = request;
 function request(options, callback) {
   var __request = _request;
   if (options._request) {
